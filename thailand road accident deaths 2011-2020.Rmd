@@ -5,23 +5,47 @@ output: html_notebook
 
 This document contains analysis of "Thailand Road Accident Deaths 2011-2020". 
 
-# Initialize environments
+# Initialize environments & Set locale to Thai
 ```{r}
+Sys.setlocale("LC_CTYPE", "thai")
 install.packages('tidyverse')
+install.packages('janitor')
 library(tidyverse)
 library(readxl)
+library(janitor)
 ```
 
 # Import data file
+To ensure that the data file can import without error, import all columns as text first.
+Then clean the column names using clean_names function
 ```{r}
 data <- read_excel("data\\thailand-road-accident-deaths-2011-2020.xlsx", col_types = "text")
+data <- clean_names(data)
 ```
+
+# Ensure proper data types
+To ensure each of the column has proper data type. 
+Create a new data frame `df` that mutate from `data` with proper data conversion.
+- for `sex` - Use recode function to convert to `Male` and `Female`
+- create a new column `datetime_rec` by combining `date_rec` and `time_rec`
+
 ```{r}
-str(data)
+df <- data %>% 
+  mutate(id = as.numeric(id), 
+         dead_year_budha = as.numeric(dead_year_budha),
+         dead_year = as.numeric(dead_year),
+         age = as.numeric(age),
+         sex = recode(sex,"1"  = "Male", "2" = "Female"),
+         birth_year = as.numeric(birth_year),
+         dead_date = as.Date(dead_date,"%Y-%m-%d"),
+         datetime_rec = as.POSIXct(paste(date_rec, time_rec), format="%Y-%m-%d %H:%M:%S"),
+         acc_lat = as.numeric(acc_lat),
+         acc_long = as.numeric(acc_long)
+  )
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+ 
+```{r}
+str(df)
+```
