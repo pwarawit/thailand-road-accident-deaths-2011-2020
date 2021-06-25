@@ -44,16 +44,59 @@ df <- data %>%
   )
 ```
 # Explore data to see if there is any further cleaning steps required 
-## Data Completeness Check
-### Any missing data
+## Each variables check
+### id
+#### Check if there is any missing values
 #### Check if all the ids are unique
 ```{r}
 n_occur <- data.frame(table(df$id))
 n_occur[n_occur$Freq>1,]
 ```
+### dead_year_budha
+Check of data distribution - as we expected only 10 different values
+``` {r}
+ggplot(data = df) + geom_bar(mapping = aes(x=dead_year_budha))
+```
+
+ ### dead_year
+Check of data distribution - as we expected only 10 different values
+``` {r}
+ggplot(data = df) + geom_bar(mapping = aes(x=dead_year))
+```
+  ### age
+Check of data distribution - as we expected only 60-70 distinct values
+``` {r}
+ggplot(data = df) + geom_bar(mapping = aes(x=age))
+```
+#### Calculate % of Age's NA
+```{r}
+n <- df %>% count()
+n_age_na <- df %>% filter(is.na(age)) %>%  count()
+age_na_pct <- n_age_na/n*100
+```
+
+#### There are about **`r as.numeric(age_na_pct)` percents**  of rows that doesn't have age data () and also some of them are 0
+
+- Where age==0 = is that mean these are infant with less than a year old? Possible.So age == 0 is valid value
+```{r}
+df %>% filter(age==0)
+df %>% filter(birth_year-dead_year == 1)
+df %>% filter((birth_year-dead_year == 1) | (birth_year == dead_year)) %>% filter(age==0)
+```
+
+ ### sex
+Check of data distribution - as we expected only 2 different values
+``` {r}
+ggplot(data = df) + geom_bar(mapping = aes(x=sex))
+```
+
+ ### birth_year
+Check of data distribution - as we expected only 60-70 values
+``` {r}
+ggplot(data = df) + geom_bar(mapping = aes(x=birth_year))
+```
 
 
- 
 ```{r}
 str(df)
 ```
