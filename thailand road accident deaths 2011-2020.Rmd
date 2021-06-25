@@ -43,6 +43,14 @@ df <- data %>%
          acc_long = as.numeric(acc_long)
   )
 ```
+# Explore data to see if there is any further cleaning steps required 
+## Data Completeness Check
+### Any missing data
+#### Check if all the ids are unique
+```{r}
+n_occur <- data.frame(table(df$id))
+n_occur[n_occur$Freq>1,]
+```
 
 
  
