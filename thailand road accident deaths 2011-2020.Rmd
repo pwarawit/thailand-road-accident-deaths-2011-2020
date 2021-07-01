@@ -35,8 +35,8 @@ df <- data %>%
          dead_year_budha = as.numeric(dead_year_budha),
          dead_year = as.numeric(dead_year),
          age = as.numeric(age),
-         sex = recode(sex,"1"  = "Male", "2" = "Female"),
-         birth_year = as.numeric(birth_year),
+         sex = recode(sex,"1"  = "Male", "2" = "Female", .default = NA_character_, .missing = NA_character_),
+         birth_year = as.numeric(birth_year), 
          dead_date = as.Date(dead_date,"%Y-%m-%d"),
          datetime_rec = as.POSIXct(paste(date_rec, time_rec), format="%Y-%m-%d %H:%M:%S"),
          acc_lat = as.numeric(acc_lat),
@@ -58,12 +58,12 @@ Check of data distribution - as we expected only 10 different values
 ggplot(data = df) + geom_bar(mapping = aes(x=dead_year_budha))
 ```
 
- ### dead_year
+### dead_year
 Check of data distribution - as we expected only 10 different values
 ``` {r}
 ggplot(data = df) + geom_bar(mapping = aes(x=dead_year))
 ```
-  ### age
+### age
 Check of data distribution - as we expected only 60-70 distinct values
 ``` {r}
 ggplot(data = df) + geom_bar(mapping = aes(x=age))
@@ -84,16 +84,19 @@ df %>% filter(birth_year-dead_year == 1)
 df %>% filter((birth_year-dead_year == 1) | (birth_year == dead_year)) %>% filter(age==0)
 ```
 
- ### sex
+### sex
 Check of data distribution - as we expected only 2 different values
 ``` {r}
 ggplot(data = df) + geom_bar(mapping = aes(x=sex))
 ```
 
- ### birth_year
+### birth_year
+Clean birth_year values
+#### nullify birth_year where age is N/A
+####  
 Check of data distribution - as we expected only 60-70 values
 ``` {r}
-ggplot(data = df) + geom_bar(mapping = aes(x=birth_year))
+ggplot(data = df2) + geom_bar(mapping = aes(x=birth_year))
 ```
 
 
